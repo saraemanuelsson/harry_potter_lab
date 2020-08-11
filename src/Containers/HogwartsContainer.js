@@ -1,6 +1,7 @@
 import React from 'react'
-import CharacterSelector from "../Components/CharacterSelector";
+import CharacterList from "../Components/CharacterList";
 import Character from "../Components/Character";
+import HouseFilter from "../Components/HouseFilter";
 
 class HogwartsContainer extends React.Component {
     constructor(props){
@@ -28,10 +29,19 @@ class HogwartsContainer extends React.Component {
         const selectedStudent = this.state.students.find(student => {
             return student.name === this.state.selectedStudentName
         })
+
+        const houses = [];
+        for (const student of this.state.students) {
+            if (!houses.includes(student.house)) {
+                houses.push(student.house)
+            }
+        }
+
         return (
             <div>
                 <h2>Hogwarts Students</h2>
-                <CharacterSelector students={this.state.students} onStudentSelected={this.handleStudentSelected} />
+                <HouseFilter houses={ houses } />
+                <CharacterList students={this.state.students} onStudentSelected={this.handleStudentSelected} />
                 <Character student={selectedStudent}/>
             </div>
 
