@@ -8,9 +8,11 @@ class HogwartsContainer extends React.Component {
         super(props);
         this.state = {
             students: [],
-            selectedStudentName: ""
+            selectedStudentName: "",
+            selectedHouse: ""
         };
         this.handleStudentSelected = this.handleStudentSelected.bind(this);
+        this.handleHouseSelected = this.handleHouseSelected.bind(this);
     }
     componentDidMount(){
         const url = 'http://hp-api.herokuapp.com/api/characters/students'
@@ -25,6 +27,14 @@ class HogwartsContainer extends React.Component {
         this.setState({ selectedStudentName: name })
     };
 
+    handleHouseSelected(house) {
+        if (house === "all") {
+            this.setState({ selectedHouse: ""})
+        } else {
+            this.setState({ selectedHouse: house })
+        }
+    };
+
     render(){
         const selectedStudent = this.state.students.find(student => {
             return student.name === this.state.selectedStudentName
@@ -37,11 +47,16 @@ class HogwartsContainer extends React.Component {
             }
         }
 
+        let students = this.state.students;
+        if (this.state.selectedHouse) {
+            students = this.state.students.filter(student => student.house === this.state.selectedHouse)
+        }
+
         return (
             <div>
                 <h2>Hogwarts Students</h2>
-                <HouseFilter houses={ houses } />
-                <CharacterList students={this.state.students} onStudentSelected={this.handleStudentSelected} />
+                <HouseFilter houses={ houses } onHouseSelected={this.handleHouseSelected} />
+                <CharacterList students={students} onStudentSelected={this.handleStudentSelected} />
                 <Character student={selectedStudent}/>
             </div>
 
